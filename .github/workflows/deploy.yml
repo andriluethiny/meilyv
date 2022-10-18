@@ -16,6 +16,6 @@ jobs:
           method: "POST"
           accept: 201
           headers: '{ "Accept": "application/vnd.heroku+json; version=3", "Content-Type": "application/json" }'
-          body: '{"pipeline":{"id":"1aa709b1-ec74-46fe-8be2-e57e79a8f61d"},"source":{"app":{"id":"eff35176-6157-4bc1-9c34-12eac86bca0d"}},"targets":[{"app":{"id":"41d8320b-3c46-46d2-a049-df7931d1e841"}}]}'
+          body: '{"pipeline":{"id":"80aca7a6-ebbe-4e24-978b-1201037b4ae8"},"source":{"app":{"id":"f2424464-c135-40b0-87b2-6d15b312afe5"}},"targets":[{"app":{"id":"9dc10619-23de-4efa-b246-10534d0407da"}}]}'
           timeout: 5000
           bearer-token: ${{secrets.HEROKU_API_KEY}}
