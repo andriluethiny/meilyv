@@ -1,0 +1,5 @@
+#Database
+?createDatabaseIfNotExist=true
+
+#Docker
+docker exec -it mydockercontainerid pg_dump -U postgres kueder > C:\Users\schluethi\Desktop\v3_dump_kueder.sql

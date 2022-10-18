@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  meilyv-database:
+    container_name: meilyv-database
+    image: postgres:latest
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: kueder
+    ports:
+      - 5434:5432

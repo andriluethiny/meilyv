@@ -1,0 +1,391 @@
+{
+	"info": {
+		"_postman_id": "9faab8f5-9904-490d-be1a-9bc7430ad71d",
+		"name": "meilyv_testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20424448"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "de",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Max\",\n    \"lastName\": \"Muster\",\n    \"userName\": \"maxli\",\n    \"email\": \"max@muster.com\",\n    \"password\": \"69420sprinkelstei\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/users/register",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.to.have.status(200)){",
+									"    const token = pm.response.headers.get(\"Authorization\").replace(\"Bearer \", \"\")",
+									"    pm.collectionVariables.set(\"USER_AUTH_TOKEN\", token)",
+									"",
+									"    const jwtPayload = JSON.parse(atob(token.split('.')[1]));",
+									"    const userId = jwtPayload[\"sub\"]",
+									"    pm.collectionVariables.set(\"USER_ID\", userId)",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"max@muster.com\",\n    \"password\": \"69420sprinkelstei\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/users/login",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "country",
+			"item": [
+				{
+					"name": "create country",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", ()=> {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Returns same country as sent\",  ()=> {",
+									"    const resData = pm.response.json();",
+									"    const reqData = JSON.parse(pm.request.body.raw)",
+									"    pm.expect(reqData.id).to.eql(resData.id)",
+									"    pm.expect(reqData.name).to.eql(resData.name)",
+									"    pm.expect(reqData.code).to.eql(resData.code)",
+									"});",
+									"",
+									"pm.collectionVariables.set(\"COUNTRY_ID\", pm.response.json().id)",
+									"",
+									"console.log(pm.collectionVariables.set(\"COUNTRY_ID\", pm.response.json().id))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"f1e06736-d666-4705-bff0-55fe317ea447\",\n    \"name\": \"Test\",\n    \"code\": \"TE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/countries",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get country",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Returned ID and required ID are identical\", function () {",
+									"    var data = pm.response.json();",
+									"    pm.expect(data.id).to.eql(pm.collectionVariables.get(\"COUNTRY_ID\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/countries/:id",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"countries",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{COUNTRY_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all countries",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"5 countries are returned\", function () {",
+									"    var data = pm.response.json();",
+									"    pm.expect(data.length).to.eql(5);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/countries",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update country",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", ()=> {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Returns same country as sent\",  ()=> {",
+									"    const resData = pm.response.json();",
+									"    const reqData = JSON.parse(pm.request.body.raw)",
+									"    pm.expect(reqData.id).to.eql(resData.id)",
+									"    pm.expect(reqData.name).to.eql(resData.name)",
+									"    pm.expect(reqData.code).to.eql(resData.code)",
+									"});",
+									"",
+									"pm.collectionVariables.set(\"COUNTRY_ID\", pm.response.json().id)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"f1e06736-d666-4705-bff0-55fe317ea447\",\n    \"name\": \"Text\",\n    \"code\": \"TX\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/countries/:id",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"countries",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{COUNTRY_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete country",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"pm.test(\"Country is deleted\", ()=> {",
+									"    const data = pm.response.data;",
+									"    pm.expect(data === undefined || data.length === 0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/countries/:id",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"countries",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{COUNTRY_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{USER_AUTH_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.request.headers.add({",
+					"    key: 'Content-Type',",
+					"    value: 'application/json'",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_URL",
+			"value": "localhost:8081",
+			"type": "string"
+		},
+		{
+			"key": "USER_AUTH_TOKEN",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "USER_ID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "COUNTRY_ID",
+			"value": "f1e06736-d666-4705-bff0-55fe317ea447",
+			"type": "string"
+		}
+	]
+}
