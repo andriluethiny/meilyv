@@ -1,0 +1,21 @@
+name: Promote to production
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  promote-to-production:
+    name: Promote to production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call API
+        uses: indiesdev/curl@v1.1
+        with:
+          url: https://api.heroku.com/pipeline-promotions
+          method: "POST"
+          accept: 201
+          headers: '{ "Accept": "application/vnd.heroku+json; version=3", "Content-Type": "application/json" }'
+          body: '{"pipeline":{"id":"1aa709b1-ec74-46fe-8be2-e57e79a8f61d"},"source":{"app":{"id":"eff35176-6157-4bc1-9c34-12eac86bca0d"}},"targets":[{"app":{"id":"41d8320b-3c46-46d2-a049-df7931d1e841"}}]}'
+          timeout: 5000
+          bearer-token: ${{secrets.HEROKU_API_KEY}}

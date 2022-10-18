@@ -1,0 +1,22 @@
+name: System testing
+
+on:
+  push:
+    branches: [ "release" ]
+
+jobs:
+  system-testing:
+    name: System testing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          branch: release
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: "meilyv-staging"
+          heroku_email: "andri.luethi@noseryoung.ch"
+      - uses: matt-ball/newman-action@master
+        with:
+          collection: "src/test/java/ch/noseryoung/meilyv/system/meilyv_testing.json"
+          envVar: '[{ "key": "API_URL", "value": "https://meilyv-staging.herokuapp.com" }]'

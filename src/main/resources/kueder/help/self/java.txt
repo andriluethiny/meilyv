@@ -1,0 +1,8 @@
+#Import
+import lombok.extern.slf4j.Slf4j;
+
+#Annotation
+@Slf4j
+
+#Implementation
+log.info(String.format("This sentence has " + numVar + "numbers in it."));

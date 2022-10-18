@@ -1,0 +1,16 @@
+#Volumes
+volumes:
+  - gradledatabase:/var/lib/postgresql/data
+
+volumes:
+  gradledatabase:
+    name: gradledatabase
+
+#Networks
+networks:
+  - java-blueprint-network
+
+networks:
+java-blueprint-network:
+  name: java-blueprint-network
+  driver: bridge
