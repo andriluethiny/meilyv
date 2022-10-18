@@ -26,5 +26,3 @@ Start the database with  `docker-compose up -d meilyv-database`.
 
 ### Backend
 Start the main class with IntelliJ
-
-This is a test
